@@ -22,10 +22,34 @@ spring:
             postLogger: true
       routes: #경로 지정
          # uri 로 지정한 것은 api 게이트웨이에 적용한 애플리케이션 이름으로 지정을 해서 포워딩을 해 주는 것
+#        - id: user-service
+#          uri: lb://USER-SERVICE
+#          predicates:
+#            - Path=/user-service/**
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/login
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/users
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
             - Path=/user-service/**
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         - id: catalog-service
           uri: lb://CATALOG-SERVICE
           predicates:
