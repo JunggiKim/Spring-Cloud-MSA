@@ -139,6 +139,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto getUserDetailsByEmail(String email) {
 		UserEntity userEntity = userRepository.findByEmail(email);
+
 		// if (userEntity == null)
 		// 	throw new UsernameNotFoundException(email);
 

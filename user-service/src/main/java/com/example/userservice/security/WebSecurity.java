@@ -24,43 +24,45 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	private final Environment env;
 
 
-	// @Override
-	// protected void configure(HttpSecurity http) throws Exception {
-	// 	http.csrf().disable();
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.csrf().disable();
 
-		// http.authorizeRequests().antMatchers("/users/**").permitAll();
-		// http.authorizeRequests().antMatchers("/actuator/**").permitAll();
-		// http.authorizeRequests().antMatchers("/health-check/**").permitAll();
-		// http.authorizeRequests().antMatchers("/h2-console/**").permitAll();
-		// http.authorizeRequests().antMatchers("/error/**").permitAll();
-		// http.authorizeRequests().antMatchers("/**")
-		// 	//                .hasIpAddress(env.getProperty("gateway.ip")) // <- IP 변경
-		// 	//                .hasIpAddress("127.0.0.1") // <- IP 변경
-		// 	.access("hasIpAddress('127.0.0.1')")
-		// 	.and()
-		// 	.addFilter(getAuthenticationFilter());
+		http.authorizeRequests().antMatchers("/users/**").permitAll();
+		http.authorizeRequests().antMatchers("/actuator/**").permitAll();
+		http.authorizeRequests().antMatchers("/health-check/**").permitAll();
+		http.authorizeRequests().antMatchers("/h2-console/**").permitAll();
+		http.authorizeRequests().antMatchers("/error/**").permitAll();
+		http.authorizeRequests().antMatchers("/**")
+			//                .hasIpAddress(env.getProperty("gateway.ip")) // <- IP 변경
+			//                .hasIpAddress("127.0.0.1") // <- IP 변경
+			.access("hasIpAddress('127.0.0.1')")
+			.and()
+			.addFilter(getAuthenticationFilter());
 
-	// 	       http.authorizeRequests().antMatchers("/users")
-	// 	               .hasIpAddress(env.getProperty("gateway.ip")) // <- IP 변경
-	// 	               .and()
-	// 	               .addFilter(getAuthenticationFilter());
+		       http.authorizeRequests().antMatchers("/users")
+		               .hasIpAddress(env.getProperty("gateway.ip")) // <- IP 변경
+		               .and()
+		               .addFilter(getAuthenticationFilter());
+
+		       http.authorizeRequests().anyRequest().denyAll();
+
+		http.headers().frameOptions().disable();
+	}
+
+	   private com.example.userservice.security.AuthenticationFilter getAuthenticationFilter() throws Exception {
+	       com.example.userservice.security.AuthenticationFilter authenticationFilter =
+	               new com.example.userservice.security.AuthenticationFilter(authenticationManager(), userService, env);
+	       return authenticationFilter;
+	   }
+
+
+	// 패스워드 인크립트 빈을 설정을해서 이 방식으로 패스워드를 검증을 한다라고 세팅
 	//
-	// 	       http.authorizeRequests().anyRequest().denyAll();
-	//
-	// 	http.headers().frameOptions().disable();
-	// }
-
-	   // private com.example.userservice.security.AuthenticationFilter getAuthenticationFilter() throws Exception {
-	   //     com.example.userservice.security.AuthenticationFilter authenticationFilter =
-	   //             new com.example.userservice.security.AuthenticationFilter(authenticationManager(), userService, env);
-	   //
-	   //     return authenticationFilter;
-	   // }
-
-	// @Override
-	// protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-	// 	auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
-	// }
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
+	}
 
 
 }
