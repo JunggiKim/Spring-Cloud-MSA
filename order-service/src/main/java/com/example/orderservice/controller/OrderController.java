@@ -1,6 +1,7 @@
 package com.example.orderservice.controller;
 
 import com.example.orderservice.dto.OrderDto;
+import com.example.orderservice.dto.gogo;
 import com.example.orderservice.jpa.OrderEntity;
 import com.example.orderservice.service.OrderService;
 import com.example.orderservice.vo.RequestOrder;
@@ -96,8 +97,8 @@ public class OrderController {
 		// } catch(InterruptedException ex) {
 		// 	log.warn(ex.getMessage());
 		// }
-
-		log.info("Add retrieved orders data");
+		// log.info("Add retrieved orders data");
+		// gogo build = gogo.builder().name("").age(1).build();
 
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
